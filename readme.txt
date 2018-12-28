@@ -1,0 +1,1 @@
+Для запуска на Java 9+ нужно добавить VM options --add-modules java.xml.bind

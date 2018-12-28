@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Test Task for Online Internship</title>
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
+</head>
+<body>
+    <div th:if="${not #lists.isEmpty(parts)}">
+        <table>
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Part</th>
+                <th>NeedForAssemble</th>
+                <th>Amount</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="part : ${parts}">
+                <td th:text="${part.id}">#</td>
+                <td th:text="${part.name}">Name</td>
+                <td>
+                    <i th:if="${part.need} == true">Need</i>
+                    <i th:if="${part.need} == false">Not Need</i>
+                </td>
+                <td th:text="${part.amount}">Amount</td>
+                <td><a th:href="@{'/edit/{id}'(id=${part.id})}">Edit</a></td>
+                <td><a th:href="@{'/delete/{id}'(id=${part.id})}">Delete</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

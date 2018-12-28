@@ -19,14 +19,21 @@ public class Part {
     private int id;
     @Column(name = "name")
     private String name;
-    @Column(name = "isNeedForAssembly")
-    private boolean isNeedForAssembly;
+    @Column(name = "need")
+    private boolean need;
     @Column(name = "amount")
     private int amount;
 
     public Part() {
     }
 
+    public boolean isNeed() {
+        return need;
+    }
+
+    public void setNeed(boolean need) {
+        this.need = need;
+    }
     public int getId() {
         return id;
     }
@@ -43,13 +50,6 @@ public class Part {
         this.name = name;
     }
 
-    public boolean isNeedForAssembly() {
-        return isNeedForAssembly;
-    }
-
-    public void setNeedForAssembly(boolean needForAssembly) {
-        isNeedForAssembly = needForAssembly;
-    }
 
     public int getAmount() {
         return amount;
