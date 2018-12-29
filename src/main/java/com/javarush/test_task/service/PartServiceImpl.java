@@ -49,4 +49,19 @@ public class PartServiceImpl implements PartService {
     public Part getOne(Integer id) {
         return repository.getOne(id);
     }
+
+    @Override
+    public List<Part> searchPart(String search) {
+        return repository.findByName(search);
+    }
+
+    @Override
+    public List<Part> searchNeededParts() {
+        return repository.findByNeedTrue();
+    }
+
+    @Override
+    public List<Part> searchOptionalParts() {
+        return repository.findByNeedFalse();
+    }
 }

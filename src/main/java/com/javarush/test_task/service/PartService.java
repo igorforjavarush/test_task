@@ -19,4 +19,9 @@ public interface PartService {
     Part getOne(Integer id);
 
 
+    List<Part> searchPart(String search);
+
+    List<Part> searchNeededParts();
+
+    List<Part> searchOptionalParts();
 }

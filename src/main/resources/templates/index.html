@@ -9,29 +9,51 @@
 <body>
     <a href="/new">Добавить запчасть</a><br>
 
-    <div th:if="${not #lists.isEmpty(parts)}">
+    <form th:action="@{/search}" name="search_form" id="search_form"
+          method="post" role="form">
+        <div>
+            <input type="text" id="search" th:name="search" maxlength="100"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Поиск</button>
+    </form>
+
+    <div>
+        Сортировка: <a href="/">Все</a>    <a href="/need">Детали, необходимые для сборки</a>    <a href="/not_need">Опциональные детали</a>
+    </div>
+
+    <div>
         <table>
             <thead>
             <tr>
-                <th>Part</th>
-                <th>NeedForAssemble</th>
-                <th>Amount</th>
-                <th>Edit</th>
-                <th>Delete</th>
+                <th>Наименование</th>
+                <th>Необходимость</th>
+                <th>Количество</th>
+                <th>Редактирование</th>
+                <th>Удаление</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="part : ${parts}">
                 <td th:text="${part.name}">Name</td>
                 <td>
-                    <i th:if="${part.need} == true">Need</i>
-                    <i th:if="${part.need} == false">Not Need</i>
+                    <i th:if="${part.need} == true">да</i>
+                    <i th:if="${part.need} == false">нет</i>
                 </td>
                 <td th:text="${part.amount}">Amount</td>
-                <td><a th:href="@{'/edit/{id}'(id=${part.id})}">Edit</a></td>
-                <td><a th:href="@{'/delete/{id}'(id=${part.id})}">Delete</a></td>
+                <td><a th:href="@{'/edit/{id}'(id=${part.id})}">Редактировать</a></td>
+                <td><a th:href="@{'/delete/{id}'(id=${part.id})}">Удалить</a></td>
             </tr>
             </tbody>
+        </table>
+    </div>
+    <br><br>
+    <div>
+        <table>
+            <tr>
+                <td>Можно собрать</td>
+                <td th:text="${computers}">Number of computers</td>
+                <td>компьютеров</td>
+            </tr>
         </table>
     </div>
 </body>
