@@ -15,7 +15,7 @@ import javax.persistence.Column;
 @Table(name ="test", schema = "test", catalog = "")
 public class Part {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "name")
     private String name;
@@ -25,6 +25,13 @@ public class Part {
     private int amount;
 
     public Part() {
+    }
+
+    public Part(String name, boolean need, int amount) {
+
+        this.name = name;
+        this.need = need;
+        this.amount = amount;
     }
 
     public boolean isNeed() {

@@ -20,13 +20,13 @@ public class PartServiceImpl implements PartService {
     }
 
     @Override
-    public void addPart(String name, boolean isNeedForAssembly, int amount) {
-
+    public void addPart(String name, boolean need, int amount) {
+        repository.save(new Part(name,need,amount));
     }
 
     @Override
-    public void updatePart(Integer id, String name, boolean isNeedForAssembly, int amount) {
-
+    public void updatePart(Part part) {
+        repository.save(part);
     }
 
     @Override
@@ -43,5 +43,10 @@ public class PartServiceImpl implements PartService {
     @Override
     public List<Part> getAll() {
         return repository.findAll();
+    }
+
+    @Override
+    public Part getOne(Integer id) {
+        return repository.getOne(id);
     }
 }
