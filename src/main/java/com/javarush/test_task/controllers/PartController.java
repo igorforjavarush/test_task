@@ -1,16 +1,18 @@
 package com.javarush.test_task.controllers;
 
 import com.javarush.test_task.entity.Part;
+import com.javarush.test_task.model.PagerModel;
 import com.javarush.test_task.service.PartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Igor Reitz on 24.12.2018
@@ -20,6 +22,9 @@ public class PartController {
     private PartService service;
     private String sortMethod = "ALL";
     private String searchString;
+    private static final int PAGE_SIZE = 10; //число записей на одной странице
+    private static final int BUTTONS_TO_SHOW = 5;
+    private static final int INITIAL_PAGE = 0;
 
     @Autowired
     public void setPartService(PartService service) {
@@ -27,9 +32,17 @@ public class PartController {
     }
 
     @GetMapping("/")
-    public String list(Model model) {
-        List<Part> partList = filterAndSort();
+    public String list(Model model, @RequestParam("page") Optional<Integer> page) {
+        int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1; //текущая страница
+        int evalPageSize = PAGE_SIZE;
+
+        Page<Part> partList = filterAndSort(evalPage, evalPageSize);
+
+        PagerModel pager = new PagerModel(partList.getTotalPages(), partList.getNumber(), BUTTONS_TO_SHOW);
+        System.out.println(partList.getTotalPages() + " " + partList.getNumber());
         model.addAttribute("parts", partList);
+        model.addAttribute("selectedPageSize", evalPageSize);
+        model.addAttribute("pager", pager);
         model.addAttribute("computers", computers());
         return "index";
     }
@@ -40,13 +53,6 @@ public class PartController {
         return "redirect:/";
     }
 
-    /**
-     * Метод для подготовки страницы Edit Page
-     *
-     * @param id    запчасти
-     * @param model модель для "пробрасывания" запчасти во View
-     * @return ссылку на страницу
-     */
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable Integer id, Model model) {
         Part part = service.getOne(id);
@@ -88,6 +94,12 @@ public class PartController {
         return "redirect:/";
     }
 
+    @GetMapping("/all")
+    public String allParts() {
+        sortMethod = "ALL";
+        return "redirect:/";
+    }
+
     @GetMapping("/need")
     public String neededParts() {
         sortMethod = "NEED";
@@ -100,23 +112,23 @@ public class PartController {
         return "redirect:/";
     }
 
-    private List<Part> filterAndSort() {
-        List<Part> partList = null;
+    private Page<Part> filterAndSort(int evalPage, int evalPageSize) {
+        Page<Part> partList = null;
         switch (sortMethod) {
             case "ALL":
-                partList = service.getAll();
+                partList = service.getAll(evalPage, evalPageSize);
                 break;
             case "SEARCH":
-                partList = service.searchPart(searchString);
-                sortMethod = "ALL";
+                partList = service.searchPart(searchString, evalPage, evalPageSize);
+                //sortMethod = "ALL";
                 break;
             case "NEED":
-                partList = service.searchNeededParts();
-                sortMethod = "ALL";
+                partList = service.searchNeededParts(evalPage, evalPageSize);
+                //sortMethod = "ALL";
                 break;
             case "NOT_NEED":
-                partList = service.searchOptionalParts();
-                sortMethod = "ALL";
+                partList = service.searchOptionalParts(evalPage, evalPageSize);
+                //sortMethod = "ALL";
                 break;
         }
         return partList;

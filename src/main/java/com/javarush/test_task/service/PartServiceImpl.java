@@ -3,6 +3,8 @@ package com.javarush.test_task.service;
 import com.javarush.test_task.entity.Part;
 import com.javarush.test_task.repository.PartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,28 +33,29 @@ public class PartServiceImpl implements PartService {
 
     @Override
     public void deletePart(Integer id) {
-        repository.delete(repository.getOne(id));
+        repository.deleteById(id);
     }
 
     @Override
-    public Part getByName(String name) {
-        return null;
-        //return repository.findByName(name);
+    public Page<Part> getAll(int evalPage,int evalPageSize) {
+        return repository.findAll(PageRequest.of(evalPage,evalPageSize));
     }
 
+
     @Override
-    public List<Part> getAll() {
-        return repository.findAll();
+    public Page<Part> searchPart(String search,int evalPage,int evalPageSize) {
+        return repository.findByName(search,PageRequest.of(evalPage,evalPageSize));
+    }
+
+
+    @Override
+    public Page<Part> searchNeededParts(int evalPage, int evalPageSize) {
+        return repository.findByNeedTrue(PageRequest.of(evalPage,evalPageSize));
     }
 
     @Override
     public Part getOne(Integer id) {
-        return repository.getOne(id);
-    }
-
-    @Override
-    public List<Part> searchPart(String search) {
-        return repository.findByName(search);
+        return repository.findById(id).get();
     }
 
     @Override
@@ -61,7 +64,7 @@ public class PartServiceImpl implements PartService {
     }
 
     @Override
-    public List<Part> searchOptionalParts() {
-        return repository.findByNeedFalse();
+    public Page<Part> searchOptionalParts(int evalPage, int evalPageSize) {
+        return repository.findByNeedFalse(PageRequest.of(evalPage,evalPageSize));
     }
 }

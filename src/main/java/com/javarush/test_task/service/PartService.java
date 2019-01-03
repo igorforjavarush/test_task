@@ -1,6 +1,7 @@
 package com.javarush.test_task.service;
 
 import com.javarush.test_task.entity.Part;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -12,16 +13,15 @@ public interface PartService {
     void updatePart(Part part);
     void deletePart(Integer id);
 
-    Part getByName(String name);
+    Page<Part> getAll(int evalPage,int evalPageSize);
 
-    List<Part> getAll();
+    Page<Part> searchPart(String search,int evalPage,int evalPageSize);
+
+    Page<Part> searchNeededParts(int evalPage, int evalPageSize);
+
+    Page<Part> searchOptionalParts(int evalPage, int evalPageSize);
 
     Part getOne(Integer id);
 
-
-    List<Part> searchPart(String search);
-
     List<Part> searchNeededParts();
-
-    List<Part> searchOptionalParts();
 }

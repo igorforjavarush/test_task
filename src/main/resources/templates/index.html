@@ -4,10 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <title>My Test Task for Online Internship</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
     <link rel="stylesheet" href="../css/style.css" type="text/css">
 </head>
 <body>
-    <a href="/new">Добавить запчасть</a><br>
+    <a href="/new">Добавить запчасть</a><br><br>
 
     <form th:action="@{/search}" name="search_form" id="search_form"
           method="post" role="form">
@@ -18,7 +22,7 @@
     </form>
 
     <div>
-        Сортировка: <a href="/">Все</a>    <a href="/need">Детали, необходимые для сборки</a>    <a href="/not_need">Опциональные детали</a>
+        Сортировка: <a href="/all">Все</a>    <a href="/need">Детали, необходимые для сборки</a>    <a href="/not_need">Опциональные детали</a>
     </div>
 
     <div>
@@ -45,6 +49,38 @@
             </tr>
             </tbody>
         </table>
+        <div class="row">
+            <div th:if="${parts.totalPages > 1}"
+                 class="form-group col-md-11 pagination-centered">
+                <ul class="pagination">
+                    <li th:class="${parts.number == 0} ? disabled"><a
+                            class="pageLink"
+                            th:href="@{/(pageSize=${selectedPageSize}, page=1)}">&laquo;</a>
+                    </li>
+                    <li th:class="${parts.number == 0} ? disabled"><a
+                            class="pageLink"
+                            th:href="@{/(pageSize=${selectedPageSize}, page=${parts.number})}">&larr;</a>
+                    </li>
+                    <li
+                            th:class="${parts.number == (page - 1)} ? 'active pointer-disabled'"
+                            th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
+                        <a class="pageLink"
+                           th:href="@{/(page=${page})}"
+                           th:text="${page}"></a>
+                    </li>
+                    <li
+                            th:class="${parts.number + 1 == parts.totalPages} ? disabled">
+                        <a class="pageLink"
+                           th:href="@{/(page=${parts.number + 2})}">&rarr;</a>
+                    </li>
+                    <li
+                            th:class="${parts.number + 1 == parts.totalPages} ? disabled">
+                        <a class="pageLink"
+                           th:href="@{/(page=${parts.totalPages})}">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
     <br><br>
     <div>
@@ -56,5 +92,28 @@
             </tr>
         </table>
     </div>
+    <script
+            src="https://code.jquery.com/jquery-1.11.1.min.js"
+            integrity="sha256-VAvG3sHdS5LqTT+5A/aeq/bZGa/Uj04xKxY8KM/w9EE="
+            crossorigin="anonymous"></script>
+
+
+    <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <script th:inline="javascript">
+		/*<![CDATA[*/
+		$(document).ready(function() {
+	changePageAndSize();
+});
+
+function changePageAndSize() {
+	$('#pageSizeSelect').change(function(evt) {
+		window.location.replace("/?pageSize=" + this.value + "&page=1");
+	});
+}
+		/*]]>*/
+	</script>
 </body>
 </html>
