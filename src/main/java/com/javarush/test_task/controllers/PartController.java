@@ -39,7 +39,7 @@ public class PartController {
         Page<Part> partList = filterAndSort(evalPage, evalPageSize);
 
         PagerModel pager = new PagerModel(partList.getTotalPages(), partList.getNumber(), BUTTONS_TO_SHOW);
-        System.out.println(partList.getTotalPages() + " " + partList.getNumber());
+
         model.addAttribute("parts", partList);
         model.addAttribute("selectedPageSize", evalPageSize);
         model.addAttribute("pager", pager);
